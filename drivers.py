@@ -1,21 +1,28 @@
 ''' Implement your driver for your own fuzzer here.	By convention it must write its 
-	outputs (which are expected to be inputs to the target program) to results/<name>/files. 
+	outputs (which are expected to be inputs to the target program) to results/<fuzzername>/<projectname>/<binaryname>/queue. 
 	Easiest way to start is the class of another fuzzer and modify it.
 '''
 
 class AFL():
 
 	def __init__(self):		
-		self.name = "AFL"
+		self.name = "afl"
 
 	def pre(self, project, binary, args):
-		return "pwd"
+		self.project = project
+		self.binary = binary
+		self.args = args
+		cmd = "mkdir -p results/afl/"+self.project+"/"+self.binary+" && "
+		cmd += "../afl/afl-fuzz -i seeds/ -o results/afl/"+self.project+"/"+self.binary+" -Q -m none targets/"+self.project+"/"+self.binary+" "+''.join(self.args)
+		return cmd
 
 	def post(self):
-		return "pwd"
+		results = "results/"+self.name+"/"+self.project+"/"+self.binary
+		cmd = "cp "+results+"/crashes/id* "+results+"queue/" # copy crashes to queue too
+		return cmd
 
 
-class PathfinderDriver():
+class Pathfinder():
 	
 	def __init__(self):		
 		self.name = "Pathfinder"
@@ -31,9 +38,9 @@ class PathfinderDriver():
 		return cmd
 
 	def post(self):		
-		cmd = "mkdir -p results/"+self.project+"/"+self.binary+"/queue/"
-		cmd += "; rm results/"+self.project+"/"+self.binary+"/*"
-		cmd += "; rm results/"+self.project+"/"+self.binary+"/queue/*"
-		cmd += "; cp ../tmp/pathfinder/"+self.binary+"/queue/* results/"+self.project+"/"+self.binary+"/queue/"
-		print(cmd)
+		results = "results/"+self.name+"/"+self.project+"/"+self.binary+""
+		cmd = "mkdir -p "+results+"/queue/"
+		cmd += "; rm "+results+"/*"
+		cmd += "; rm "+results+"/queue/*"
+		cmd += "; cp ../tmp/pathfinder/"+self.binary+"/queue/* "+results+"/queue/"
 		return cmd
