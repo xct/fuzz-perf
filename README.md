@@ -14,8 +14,8 @@ framework that evaluates fuzzers by comparing achieved code coverage and found b
 
 * run build.sh to download, build & symlink the target programs
 * config.ini: adjust paths to your local dynamorio installation 
-* adjust runtime value in config.ini (how long each fuzzer is executed)
-* adjust which fuzzer drivers to include in the test
+* config.ini: adjust runtime value (how long each fuzzer is executed)
+* config.ini: adjust which fuzzer drivers to include in the test
 * run `python3 perf.py` and wait for the results
 
 ## Add own fuzzer
