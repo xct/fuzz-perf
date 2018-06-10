@@ -8,6 +8,38 @@ mkdir targets
 mkdir results
 cd projects
 
+# libpng
+wget https://download.sourceforge.net/libpng/libpng-1.6.17.tar.gz
+tar -xvf libpng-1.6.17.tar.gz
+cd libpng-1.6.17
+./configure LDFLAGS="-static"
+make -j4
+cd ..
+mkdir ../targets/libpng
+mkdir ../results/libpng
+ln -s ../../projects/libpng-1.6.17/pngfix ../targets/libpng/pngfix
+ln -s ../../projects/libpng-1.6.17/pngimage ../targets/libpng/pngimage
+
+
+# libming 
+git clone https://github.com/libming/libming.git
+cd libming
+git checkout ming-0_4_8
+./autogen.sh
+./configure LDFLAGS="-static"
+make -j4
+cd ..
+mkdir ../targets/libming
+mkdir ../results/libming
+ln -s ../../projects/libming/util/swftocxx ../targets/libming/swftocxx
+ln -s ../../projects/libming/util/swftophp ../targets/libming/swftophp
+ln -s ../../projects/libming/util/swftoperl ../targets/libming/swftoperl
+ln -s ../../projects/libming/util/swftopython ../targets/libming/swftopython
+ln -s ../../projects/libming/util/listjpeg ../targets/libming/listjpeg
+ln -s ../../projects/libming/util/listmp3 ../targets/libming/listmp3
+ln -s ../../projects/libming/util/listswf ../targets/libming/listswf
+
+
 # libjasper ###########################################
 mkdir jasper
 mkdir jasper/build

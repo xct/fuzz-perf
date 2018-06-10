@@ -5,6 +5,7 @@ import psutil
 import sys
 import json
 import re
+import random
 from configparser import ConfigParser
 
 def kill(proc_pid):
@@ -62,22 +63,30 @@ class Perf():
         # 0. build target applications (at this point we require that has been done with ./build.sh)
         # 1. run with fuzzers
         print("Running Fuzzers & Generating Coverage...")
+        print(self.drivers)
+        print(self.targets)
+
         for driver in self.drivers: # array of fuzzers
             for project, targets in self.targets.items(): # project | dict of targets with their arguments
-                for target in targets:
+                for entry in targets:
+                    target = random.choice(list(entry.keys())) # there is only one
+                    raw_args = entry[target]
+
                     # run the fuzzer for the specified time
-                    self.run(driver.pre(project, target, targets[target]))
+                    self.run(driver.pre(project, target, raw_args))
                     self.run(driver.post())
                     # drcov
                     args = ""
-                    for s in targets[target]:
+                    for s in raw_args:
                         args += s.replace("@@","queue/$i")
                     cmd = "cd results/"+driver.name+"/"+project+"/"+target+" && "
                     cmd += "for i in `ls -1 queue/`; do "+self.drrun+" -t drcov -- ../../../../targets/"+project+"/"+target+" "+args+"; done"
                     self.run(cmd)
                     # drcov2lcov
                     cmd = "cd results/"+driver.name+"/"+project+"/"+target+" && "
-                    cmd += self.drcov2lcov+" -dir . -output coverage.info --src_filter "+self.filters[project]
+                    cmd += self.drcov2lcov+" -dir . -output coverage.info"
+                    if project in self.filters and len(self.filters[project]) > 0:
+                        cmd += " --src_filter "+self.filters[project]
                     self.run(cmd)
                     # genhtml
                     cmd = "cd results/"+driver.name+"/"+project+"/"+target+" && "
