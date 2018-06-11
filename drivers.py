@@ -67,3 +67,39 @@ class Pathfinder():
 		results = "../tmp/pathfinder/"+self.binary+"/crashes/"
 		cmd = "ls -1 "+results+" | wc -l "
 		return cmd
+
+
+class PathfinderHybrid():
+	
+	def __init__(self):		
+		self.name = "pathfinder_hybrid"
+
+	def pre(self, project, binary, args):
+		''' Prepare environment and run the fuzzer
+		'''
+		self.project = project
+		self.binary = binary
+		self.args = args
+		cmd = "cd ../pathfinder_hybrid/ && "
+		cmd += "python fuzzer.py -i ../fuzz-perf/seeds/ "
+		cmd += "\"../fuzz-perf/targets/"+self.project+"/"+self.binary+" "+''.join(self.args)+"\""
+		print(cmd)
+		return cmd
+
+	def post(self):	
+		''' Copy results to correct folder & do necessary cleanup 
+		'''	
+		results = "results/"+self.name+"/"+self.project+"/"+self.binary+""
+		cmd = "mkdir -p "+results+"/queue/"
+		cmd += "; rm "+results+"/*"
+		cmd += "; rm "+results+"/queue/*"
+		cmd += "; cp ../tmp/pathfinder/"+self.binary+"/queue/* "+results+"/queue/"
+		return cmd
+
+	def crashes(self):
+		''' number of crashes
+		'''
+		results = "../tmp/pathfinder/"+self.binary+"/crashes/"
+		cmd = "ls -1 "+results+" | wc -l "
+		return cmd
+
