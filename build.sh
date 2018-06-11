@@ -8,6 +8,22 @@ mkdir targets
 mkdir results
 cd projects
 
+
+# libjpeg-turbo
+wget https://kent.dl.sourceforge.net/project/libjpeg-turbo/1.5.0/libjpeg-turbo-1.5.0.tar.gz
+tar -xvf libjpeg-turbo-1.5.0.tar.gz
+cd libjpeg-turbo-1.5.0
+./configure LDFLAGS="-static"
+make -j4
+cd ..
+mkdir ../targets/libjpeg-turbo
+mkdir ../results/libjpeg-turbo
+ln -s ../../projects/libjpeg-turbo-1.5.0/cjpeg ../targets/libjpeg-turbo/cjpeg
+ln -s ../../projects/libjpeg-turbo-1.5.0/djpeg ../targets/libjpeg-turbo/djpeg
+ln -s ../../projects/libjpeg-turbo-1.5.0/rdjpgcom ../targets/libjpeg-turbo/rdjpgcom
+ln -s ../../projects/libjpeg-turbo-1.5.0/jpegtran ../targets/libjpeg-turbo/jpegtran
+
+
 # libpng
 wget https://download.sourceforge.net/libpng/libpng-1.6.17.tar.gz
 tar -xvf libpng-1.6.17.tar.gz

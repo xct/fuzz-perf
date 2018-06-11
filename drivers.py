@@ -9,25 +9,39 @@ class AFL():
 		self.name = "afl"
 
 	def pre(self, project, binary, args):
+		''' Prepare environment and run the fuzzer
+		'''
 		self.project = project
 		self.binary = binary
 		self.args = args
-		cmd = "mkdir -p results/afl/"+self.project+"/"+self.binary+" && "
-		cmd += "../afl/afl-fuzz -i seeds/ -o results/afl/"+self.project+"/"+self.binary+" -Q -m none targets/"+self.project+"/"+self.binary+" "+''.join(self.args)
+		results = "results/"+self.name+"/"+self.project+"/"+self.binary
+		cmd = "mkdir -p "+results+" && "
+		cmd += "../afl/afl-fuzz -i seeds/ -o "+results+" -Q -m none targets/"+self.project+"/"+self.binary+" "+''.join(self.args)
 		return cmd
 
 	def post(self):
+		''' Copy results to correct folder & do necessary cleanup 
+		'''
 		results = "results/"+self.name+"/"+self.project+"/"+self.binary
 		cmd = "cp "+results+"/crashes/id* "+results+"queue/" # copy crashes to queue too
+		return cmd
+
+	def crashes(self):
+		''' number of crashes
+		'''
+		results = "results/"+self.name+"/"+self.project+"/"+self.binary
+		cmd = "ls -1 "+results+"/crashes/ | grep -iv 'Readme' | wc -l "
 		return cmd
 
 
 class Pathfinder():
 	
 	def __init__(self):		
-		self.name = "Pathfinder"
+		self.name = "pathfinder"
 
 	def pre(self, project, binary, args):
+		''' Prepare environment and run the fuzzer
+		'''
 		self.project = project
 		self.binary = binary
 		self.args = args
@@ -37,10 +51,19 @@ class Pathfinder():
 		print(cmd)
 		return cmd
 
-	def post(self):		
+	def post(self):	
+		''' Copy results to correct folder & do necessary cleanup 
+		'''	
 		results = "results/"+self.name+"/"+self.project+"/"+self.binary+""
 		cmd = "mkdir -p "+results+"/queue/"
 		cmd += "; rm "+results+"/*"
 		cmd += "; rm "+results+"/queue/*"
 		cmd += "; cp ../tmp/pathfinder/"+self.binary+"/queue/* "+results+"/queue/"
+		return cmd
+
+	def crashes(self):
+		''' number of crashes
+		'''
+		results = "../tmp/pathfinder/"+self.binary+"/crashes/"
+		cmd = "ls -1 "+results+" | wc -l "
 		return cmd

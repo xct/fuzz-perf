@@ -37,6 +37,8 @@ class Perf():
         self.filters = json.loads(config.get('General','Filters'))
         # some cleanup
         self.run("rm -rf results/*")
+        self.coverage_by_target = dict()
+        self.crashes_by_target = dict()
 
 
     def run(self, cmd):
@@ -59,6 +61,35 @@ class Perf():
             outfile.write(json.dumps(self.coverage)) 
 
 
+    def print_coverage_latex(self):
+        print("Coverage:")
+        #Beispiel 002 & 4(0) & 4(0) & 4(1) & 8(6)
+        result = "Programm"
+        for driver in self.drivers:
+            result += " & " + driver.name 
+        result += "\n"
+        for name in self.coverage_by_target:
+            result += " "+name
+            for driver, value in self.coverage_by_target[name]:
+                result +=  " & " + str(value)
+            result += "\n"
+        print(result) 
+
+
+    def print_crashes_latex(self):
+        print("Crashes:")
+        result = "Programm"
+        for driver in self.drivers:
+            result += " & " + driver.name 
+        result += "\n"
+        for name in self.crashes_by_target:
+            result += " "+name
+            for driver, value in self.crashes_by_target[name]:
+                result +=  " & " + value.replace("\n","")
+            result += "\n"
+        print(result)
+
+
     def main(self):
         # 0. build target applications (at this point we require that has been done with ./build.sh)
         # 1. run with fuzzers
@@ -71,7 +102,6 @@ class Perf():
                 for entry in targets:
                     target = random.choice(list(entry.keys())) # there is only one
                     raw_args = entry[target]
-
                     # run the fuzzer for the specified time
                     self.run(driver.pre(project, target, raw_args))
                     self.run(driver.post())
@@ -94,12 +124,22 @@ class Perf():
                     s = self.runs(cmd)
                     p = re.search(r"lines......: ([0-9+\.[0-9]+)% \(", s).group(1)
                     self.coverage[driver.name].append((target, p))
+                    if target not in self.coverage_by_target:
+                        self.coverage_by_target[target] = []
+                    self.coverage_by_target[target].append((driver.name, p))
+                    # amount of crashes
+                    if target not in self.crashes_by_target:
+                        self.crashes_by_target[target] = []
+                    self.crashes_by_target[target].append((driver.name, self.runs(driver.crashes())))
 
         # 2. generate results
         print("\nResults: (Runtime="+str(self.runtime)+")")
         print(self.coverage)
+        print("\n")        
         self.write_results()
-        print("\nDone:\n")
+        self.print_coverage_latex()
+        self.print_crashes_latex()
+        print("\nDone!\n")
 
 
 if __name__ == "__main__":
