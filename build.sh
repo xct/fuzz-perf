@@ -70,7 +70,7 @@ cd ../..
 mkdir ../targets/jasper
 mkdir ../results/jasper
 ln -s ../../projects/jasper/build/src/appl/imginfo ../targets/jasper/imginfo
-
+ln -s ../../projects/jasper/build/src/appl/imgcmp ../targets/jasper/imgcmp
 
 # libyaml ###########################################
 git clone https://github.com/yaml/libyaml.git libyaml
@@ -96,3 +96,6 @@ cd ..
 mkdir ../targets/giflib
 mkdir ../results/giflib
 ln -s ../../projects/giflib/util/giftext ../targets/giflib/giftext
+ln -s ../../projects/giflib/util/giffix ../targets/giflib/giffix
+ln -s ../../projects/giflib/util/gif2rgb ../targets/giflib/gif2rgb
+ln -s ../../projects/giflib/util/gifclrmp ../targets/giflib/gifclrmp
