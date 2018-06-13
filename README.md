@@ -9,6 +9,7 @@ framework that evaluates fuzzers by comparing achieved code coverage and found b
 ## Requirements
 
 * lcov (using genhtml to get readable coverage information)
+* php php-dev (for libming)
 
 ## Setup
 

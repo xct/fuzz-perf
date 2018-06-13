@@ -70,6 +70,8 @@ class Pathfinder():
 
 
 class PathfinderHybrid():
+	''' this is just copy pasted from pathfinder with an added -hybrid flag
+	'''
 	
 	def __init__(self):		
 		self.name = "pathfinder_hybrid"
@@ -80,8 +82,8 @@ class PathfinderHybrid():
 		self.project = project
 		self.binary = binary
 		self.args = args
-		cmd = "cd ../pathfinder_hybrid/ && "
-		cmd += "python fuzzer.py -i ../fuzz-perf/seeds/ "
+		cmd = "cd ../pathfinder/ && "
+		cmd += "python fuzzer.py -hybrid -i ../fuzz-perf/seeds/ "
 		cmd += "\"../fuzz-perf/targets/"+self.project+"/"+self.binary+" "+''.join(self.args)+"\""
 		print(cmd)
 		return cmd
