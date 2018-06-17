@@ -66,12 +66,12 @@ class Perf():
         #Beispiel 002 & 4(0) & 4(0) & 4(1) & 8(6)
         result = "Programm"
         for driver in self.drivers:
-            result += " & " + driver.name 
+            result += " & " + driver.name
         result += "\n"
         for name in self.coverage_by_target:
             result += " "+name
             for driver, value in self.coverage_by_target[name]:
-                result +=  " & " + str(value)
+                result +=  " & " + str(value) + "%"
             result += "\n"
         print(result) 
 

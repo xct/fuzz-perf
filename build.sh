@@ -8,6 +8,34 @@ mkdir targets
 mkdir results
 cd projects
 
+# Currently 5 crafted challenge binaries + 25 Real Binaries in different vulnerable versions
+
+# custom examples
+git clone https://github.com/xct-r3v3rse/challenges.git
+cd challenges
+./build.sh
+cd ..
+mkdir ../targets/challenges
+mkdir ../results/challenges
+ln -s ../../projects/challenges/build64/000 ../targets/challenges/000 
+ln -s ../../projects/challenges/build64/002 ../targets/challenges/002
+ln -s ../../projects/challenges/build64/003 ../targets/challenges/003
+ln -s ../../projects/challenges/build64/004 ../targets/challenges/004
+ln -s ../../projects/challenges/build64/005 ../targets/challenges/005
+
+# libtiff
+git clone https://gitlab.com/libtiff/libtiff.git
+cd libtiff 
+git checkout Release-v4-0-3
+./configure LDFLAGS="-static"
+make -j4
+cd ..
+mkdir ../targets/libtiff
+mkdir ../results/libtiff
+ln -s ../../projects/libtiff/tools/tiffinfo ../targets/libtiff/tiffinfo # -i -z @@
+ln -s ../../projects/libtiff/tools/pal2rgb ../targets/libtiff/pal2rgb # -c none @@ out
+ln -s ../../projects/libtiff/tools/raw2tiff ../targets/libtiff/raw2tiff # -c none @@ out
+
 
 # libjpeg-turbo
 wget https://kent.dl.sourceforge.net/project/libjpeg-turbo/1.5.0/libjpeg-turbo-1.5.0.tar.gz
@@ -44,6 +72,8 @@ git checkout ming-0_4_8
 ./autogen.sh
 ./configure LDFLAGS="-static"
 make -j4
+make clean # no idea why cleaning and rebuilding is needed but it doesnt work without
+make 
 cd ..
 mkdir ../targets/libming
 mkdir ../results/libming
@@ -54,6 +84,7 @@ ln -s ../../projects/libming/util/swftopython ../targets/libming/swftopython
 ln -s ../../projects/libming/util/listjpeg ../targets/libming/listjpeg
 ln -s ../../projects/libming/util/listmp3 ../targets/libming/listmp3
 ln -s ../../projects/libming/util/listswf ../targets/libming/listswf
+ln -s ../../projects/libming/util/raw2adpcm ../targets/libming/raw2adpcm
 
 
 # libjasper ###########################################
@@ -71,6 +102,7 @@ mkdir ../targets/jasper
 mkdir ../results/jasper
 ln -s ../../projects/jasper/build/src/appl/imginfo ../targets/jasper/imginfo
 ln -s ../../projects/jasper/build/src/appl/imgcmp ../targets/jasper/imgcmp
+ln -s ../../projects/jasper/build/src/appl/jasper ../targets/jasper/jasper
 
 # libyaml ###########################################
 git clone https://github.com/yaml/libyaml.git libyaml
