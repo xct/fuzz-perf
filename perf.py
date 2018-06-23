@@ -9,10 +9,14 @@ import random
 from configparser import ConfigParser
 
 def kill(proc_pid):
-    process = psutil.Process(proc_pid)
-    for proc in process.children(recursive=True):
-        proc.kill()
-    process.kill()
+    try:
+        process = psutil.Process(proc_pid)
+        for proc in process.children(recursive=True):        
+            proc.kill()
+        process.kill()
+    except:
+        print("Could not kill process "+str(proc_pid)+ "(already dead?)")
+        pass
 
 
 class Perf():
