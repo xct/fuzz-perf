@@ -1,6 +1,8 @@
 # fuzz-perf
 Framework that evaluates fuzzers by comparing achieved code coverage and found bugs. At this point there are 5 challenge binaries and 25 real programs in various vulnerable versions.
 
+The coverage data is mostly filtered to the source directory of the application. This includes files that are possible not part of the particular tool inside a tested set of tools. At some point in the future we could look at the makefiles and make more specific filters, to get higher coverage per application. However this does not change the relative results and does not impede the comparison.
+
 ## Requirements
 * lcov (using genhtml to get readable coverage information)
 * php php-dev
