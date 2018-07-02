@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# this script sets the programs and versions used as targets in the master thesis
-# this creates a projects directory at the folder level where pathfinders folder is
-BUILD="default"
+# this version of build builds with all programs with afl-clang-fast, modified with LAF (https://lafintel.wordpress.com/)
+BUILD="laf"
 PREFIX=""
 
 mkdir projects
@@ -11,6 +10,13 @@ mkdir results
 cd projects
 mkdir $BUILD
 cd $BUILD
+
+# set env variables for laf
+export LAF_SPLIT_SWITCHES=1
+export LAF_TRANSFORM_COMPARES=1
+export LAF_SPLIT_COMPARES=1
+export CC=~/fuzzing/laf/afl-clang-fast 
+export CXX=~/fuzzing/laf/afl-clang-fast++
 
 # Currently 5 crafted challenge binaries + 25 Real Binaries in different vulnerable versions
 

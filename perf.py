@@ -109,19 +109,27 @@ class Perf():
                     # run the fuzzer for the specified time
                     self.run(driver.pre(project, target, raw_args))
                     self.run(driver.post())
+
                     # drcov
                     args = ""
                     for s in raw_args:
                         args += s.replace("@@","queue/$i")
                     cmd = "cd results/"+driver.name+"/"+project+"/"+target+" && "
-                    cmd += "for i in `ls -1 queue/`; do "+self.drrun+" -t drcov -- ../../../../targets/"+project+"/"+target+" "+args+"; done"
+
+                    cmd += "for i in `ls -1 queue/`; do "+self.drrun+" -t drcov -- ../../../../targets/"
+                    if driver.custom:
+                        cmd += driver.name+"/"+project+"/"+target+" "+args+"; done"
+                    else:
+                        cmd += "/default/"+project+"/"+target+" "+args+"; done"
                     self.run(cmd)
+
                     # drcov2lcov
                     cmd = "cd results/"+driver.name+"/"+project+"/"+target+" && "
                     cmd += self.drcov2lcov+" -dir . -output coverage.info"
                     if project in self.filters and len(self.filters[project]) > 0:
                         cmd += " --src_filter "+self.filters[project]
                     self.run(cmd)
+
                     # genhtml
                     cmd = "cd results/"+driver.name+"/"+project+"/"+target+" && "
                     cmd += "genhtml coverage.info --ignore-errors source --output-directory coverage"
@@ -131,6 +139,7 @@ class Perf():
                     if target not in self.coverage_by_target:
                         self.coverage_by_target[target] = []
                     self.coverage_by_target[target].append((driver.name, p))
+
                     # amount of crashes
                     if target not in self.crashes_by_target:
                         self.crashes_by_target[target] = []
