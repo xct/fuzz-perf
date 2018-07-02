@@ -20,7 +20,7 @@ class AFL():
 		self.args = args
 		results = "results/"+self.name+"/"+self.project+"/"+self.binary
 		cmd = "mkdir -p "+results+" && "
-		cmd += "../afl/afl-fuzz -i seeds/ -o "+results+" -Q -m none targets/"+self.project+"/"+self.binary+" "+''.join(self.args)
+		cmd += "AFL_SKIP_BIN_CHECK=1 ../afl/afl-fuzz -i seeds/ -o "+results+" -Q -m none targets/default/"+self.project+"/"+self.binary+" "+''.join(self.args)
 		return cmd
 
 	def post(self):
@@ -55,7 +55,7 @@ class LAF():
 		results = "results/"+self.name+"/"+self.project+"/"+self.binary
 		cmd = "mkdir -p "+results+" && "
 		# callee location modified for subfolder
-		cmd += "AFL_SKIP_BIN_CHECK=1 ../laf/afl-fuzz -i seeds/ -o "+results+" -Q -m none targets/"+ self.name + "/" +self.project+"/"+self.binary+" "+''.join(self.args)
+		cmd += "AFL_SKIP_BIN_CHECK=1 ../laf/afl-fuzz -i seeds/ -o "+results+" -Q -m none targets/laf/" +self.project+"/"+self.binary+" "+''.join(self.args)
 		return cmd
 
 	def post(self):
@@ -89,7 +89,7 @@ class Pathfinder():
 		self.args = args
 		cmd = "cd ../pathfinder/ && "
 		cmd += "python fuzzer.py -i ../fuzz-perf/seeds/ "
-		cmd += "\"../fuzz-perf/targets/"+self.project+"/"+self.binary+" "+''.join(self.args)+"\""
+		cmd += "\"../fuzz-perf/targets/default/"+self.project+"/"+self.binary+" "+''.join(self.args)+"\""
 		print(cmd)
 		return cmd
 
@@ -127,7 +127,7 @@ class PathfinderHybrid():
 		self.args = args
 		cmd = "cd ../pathfinder/ && "
 		cmd += "python fuzzer.py -hybrid -i ../fuzz-perf/seeds/ "
-		cmd += "\"../fuzz-perf/targets/"+self.project+"/"+self.binary+" "+''.join(self.args)+"\""
+		cmd += "\"../fuzz-perf/targets/default/"+self.project+"/"+self.binary+" "+''.join(self.args)+"\""
 		print(cmd)
 		return cmd
 

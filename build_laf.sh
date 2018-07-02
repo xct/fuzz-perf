@@ -23,7 +23,7 @@ export CXX=~/fuzzing/laf/afl-clang-fast++
 # custom examples
 git clone https://github.com/xct-r3v3rse/challenges.git
 cd challenges
-./build.sh
+./build_laf.sh
 cd ..
 mkdir -p ../../targets/$BUILD/challenges
 ln -s ../../../projects/$BUILD/challenges/build64/000 ../../targets/$BUILD/challenges/000 
